@@ -206,3 +206,271 @@ const getCategoryName = (resData) => {
   <div v-else>No data available</div>
 </template>
 
+<style scoped>
+.about {
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+}
+
+.top_part {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  margin-inline: auto;
+  gap: 0.5rem;
+  margin-block: 2rem;
+}
+
+.top_part > h1 {
+  width: 90%;
+  text-align: center;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 27px;
+}
+
+.top_part > p {
+  text-align: center;
+  width: 90%;
+  font-size: 1rem;
+  font-family: "Libre Baskerville", serif;
+}
+
+.category span {
+  font-weight: 700;
+}
+
+.image_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.image_container > img {
+  width: 90%;
+  margin-inline: auto;
+}
+
+.image_container > p {
+  width: 90%;
+  font-size: 1rem;
+  font-family: "Libre Baskerville", serif;
+  overflow: hidden;
+}
+
+.author {
+  display: flex;
+  gap: 1rem;
+  align-self: flex-start;
+  width: 90%;
+  margin-inline: auto;
+}
+
+.author_img {
+  width: 60px;
+  height: 60px;
+  background: #d9d9d9;
+}
+
+.author_img > img {
+  width: 100%;
+  height: 100%;
+}
+
+.author_name h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.title {
+  display: block;
+  width: 90%;
+  margin-inline: auto;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.news_cards {
+  margin-block: 1rem;
+}
+
+.newscard_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.top_part {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-block: 1rem;
+}
+
+.top_part > img {
+  width: 90%;
+  margin-inline: auto;
+}
+
+.bottom_part {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  margin-inline: auto;
+  gap: 0.5rem;
+}
+
+.bottom_part > h2 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 27px;
+}
+
+.bottom_part > p {
+  text-align: center;
+  font-family: "Libre Baskerville", serif;
+}
+
+.category span {
+  font-weight: 700;
+}
+
+.line_div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-block: 2rem;
+}
+
+
+:deep(.contentPara  img) {
+  width: 90vw;
+  height: 250px;
+  margin-inline: auto;
+  object-fit: cover;
+}
+
+:deep(.contentPara p){
+  margin: 1em 0;
+  line-height: 1.5;
+}
+:deep(.contentPara p code){
+  background-color: #eee;
+  padding: 0.05em 0.2em;
+  border: 1px solid #ccc;
+}
+
+:deep(.contentPara ol,
+ul){
+  margin: 1em;
+}
+:deep(.contentPara ol li ol,
+ol li ul,
+ul li ol,
+ul li ul){
+  margin: 0 2em;
+}
+ :deep(.contentPara ol li p,
+ ul li p){
+  margin: 0;
+}
+
+:deep(.contentPara dl){
+  font-family: monospace, monospace;
+}
+ :deep(.contentPara dl dt){
+  font-weight: bold;
+}
+ :deep(.contentPara dl dd){
+  margin: -1em 0 1em 1em;
+}
+
+ :deep(.contentPara img){
+  max-width: 100%;
+  /* display: block; */
+  margin: 0 auto;
+  padding: 0.5em;
+}
+
+ :deep(.contentPara blockquote){
+  padding-left: 1em;
+  font-style: italic;
+  border-left: solid 1px #fa6432;
+}
+
+ :deep(.contentPara table){
+  font-size: 1rem;
+  text-align: left;
+  caption-side: bottom;
+  margin-bottom: 2em;
+}
+ :deep(.contentPara table *){
+  border: none;
+}
+ :deep(.contentPara table thead,
+ table tr){
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+:deep(.contentPara table tr:nth-child(even) ){
+  background-color: rgba(200, 200, 200, 0.2);
+}
+:deep(.contentPara table tbody){
+  display: block;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+:deep(.contentPara table td,
+table th){
+  padding: 0.25em;
+}
+
+:deep(.contentPara table,
+.highlight > pre,
+pre.example ){
+  max-height: 70vh;
+  margin: 1em 0;
+  padding: 1em;
+  overflow: auto;
+  font-size: 0.85rem;
+  font-family: monospace, monospace;
+  border: 1px dashed rgba(250, 100, 50, 0.5);
+}
+
+:deep(.contentPara figure){
+  margin: 1em 0;
+}
+:deep(.contentPara figure figcaption){
+  font-family: monospace, monospace;
+  font-size: 0.75em;
+  text-align: center;
+  color: grey;
+}
+
+:deep(.contentPara .footnote-definition sup){
+  margin-left: -1.5em;
+  float: left;
+}
+
+:deep(.contentPara .footnote-definition .footnote-body){
+  margin: 1em 0;
+  padding: 0 1em;
+  border: 1px dashed rgba(250, 100, 50, 0.3);
+  background-color: rgba(200, 200, 200, 0.2);
+}
+:deep(.contentPara .footnote-definition .footnote-body p:only-child){
+  margin: 0.2em 0;
+}
+
+</style>
