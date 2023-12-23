@@ -8,6 +8,7 @@ import { ref, computed, watchEffect} from 'vue'
 import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
 import { useToken } from '../stores/counter'
+import '../styles/viewStyles/homeStyles.css'
 
 const tokenstore = useToken();
 const token = tokenstore.token;
@@ -100,24 +101,4 @@ watchEffect(() => {
   <div v-else>No data available</div>
 </template>
 
-<style scoped>
-.buttomTitle_section {
-  background: #d7e5ca;
-  padding-top: 1.5rem;
-  padding-bottom: 2.5rem;
-}
 
-.line {
-  margin-block: 2rem;
-}
-
-.line_div {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.lastCta {
-  margin-bottom: 6rem;
-}
-</style>

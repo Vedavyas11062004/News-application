@@ -147,6 +147,7 @@ const goToAuthorsPage = (id) => {
 
 .Btn {
   background: #ffffff;
+  color: black;
   border: none;
   padding-block: 0.75rem;
   padding-inline: 1.5rem;

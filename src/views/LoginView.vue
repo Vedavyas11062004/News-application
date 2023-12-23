@@ -4,6 +4,7 @@ import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { useRouter } from "vue-router";
 import {useToken } from "../stores/counter"
+import '../styles/viewStyles/loginStyles.css';
 
 const tokenstore = useToken();
 const token = tokenstore.token;
@@ -72,29 +73,3 @@ watchEffect(()=>{
   </form>
 </template>
 
-<style scoped>
-form{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 60vh;
-  justify-content: center;
-  gap: 1.25rem;
-}
-form > label{
-  height: 50px;
-  width: 150px;
-  font-size: 1.25rem;
-}
-form>label>input{
-  border: .75px solid black;
-  border-radius: 5px;
-  margin-top: .25rem;
-  height: 25px;
-}
-form > button{
-  font-size: 1rem;
-  padding-inline: 2rem;
-  padding-block: .35rem;
-}
-</style>
