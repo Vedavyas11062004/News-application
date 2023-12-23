@@ -4,7 +4,7 @@ import {useRoute} from 'vue-router'
 import {useQuery} from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import {useRouter} from 'vue-router'
-import '../styles/viewStyles/aboutStyles.css'
+import CategoryCard from '../components/CategoryCard.vue'
 
 const routers = useRouter()
 const router = useRoute()
@@ -124,83 +124,9 @@ const getCategoryName = (resData) => {
         <img src="@/assets/Line.svg" class="line"/>
       </div>
     </div>
-    <div class="news_cards">
-      <span class="title">TITLE SECTION LIGHT</span>
-      <div class="newscard_container">
-        <div class="top_part">
-          <img src="@/assets/Picture.svg" alt="img.."/>
-        </div>
-        <div class="bottom_part">
-          <div class="category">
-            <span>{{ getCategoryName(resData) }}</span> par
-            <span
-            >{{ resData?.author?.node?.firstName }}{{ ' ' }}
-              {{ resData?.author?.node?.lastName }}</span>
-          </div>
-          <h2 @click="goToSinglePage()">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</h2>
-        </div>
-      </div>
-      <div class="newscard_container">
-        <div class="top_part">
-          <img src="@/assets/Picture.svg" alt="img.."/>
-        </div>
-        <div class="bottom_part">
-          <div class="category">
-            <span>{{ getCategoryName(resData) }}</span> par
-            <span
-            >{{ resData?.author?.node?.firstName }}{{ ' ' }}
-              {{ resData?.author?.node?.lastName }}</span>
-          </div>
-          <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</h2>
-        </div>
-      </div>
-      <div class="newscard_container">
-        <div class="top_part">
-          <img src="@/assets/Picture.svg" alt="img.."/>
-        </div>
-        <div class="bottom_part">
-          <div class="category">
-            <span>{{ getCategoryName(resData) }}</span> par
-            <span
-            >{{ resData?.author?.node?.firstName }}{{ ' ' }}
-              {{ resData?.author?.node?.lastName }}</span>
-          </div>
-          <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</h2>
-        </div>
-      </div>
-      <div class="newscard_container">
-        <div class="top_part">
-          <img src="@/assets/Picture.svg" alt="img.."/>
-        </div>
-        <div class="bottom_part">
-          <div class="category">
-            <span>{{ getCategoryName(resData) }}</span> par
-            <span
-            >{{ resData?.author?.node?.firstName }}{{ ' ' }}
-              {{ resData?.author?.node?.lastName }}</span>
-          </div>
-          <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</h2>
-        </div>
-      </div>
-      <div class="newscard_container">
-        <div class="top_part">
-          <img src="@/assets/Picture.svg" alt="img.."/>
-        </div>
-        <div class="bottom_part">
-          <div class="category">
-            <span>{{ getCategoryName(resData) }}</span> par
-            <span
-            >{{ resData?.author?.node?.firstName }}{{ ' ' }}
-              {{ resData?.author?.node?.lastName }}</span>
-          </div>
-          <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</h2>
-        </div>
-      </div>
-      <div class="line_div">
-        <img src="@/assets/Line.svg" class="line"/>
-      </div>
-    </div>
+    <CategoryCard v-if="resData?.categories?.nodes[0]?.databaseId" :categoryId=resData?.categories?.nodes[0]?.databaseId />
   </div>
+  
   <div v-else-if="loading">Loading...</div>
   <div v-else-if="error">Error: {{ error.message }}</div>
   <div v-else>No data available</div>
