@@ -96,7 +96,11 @@ watchEffect(() => {
     </div>
     <Cta class="lastCta" />
   </main>
-  <div v-else-if="loading">Loading...</div>
+  <div v-else-if="loading" class="loadingAnimation">
+    <video autoPlay muted loop width="50" height="50">
+        <source src="@/assets/loadingAnimation.mp4" type='video/mp4'/>
+    </video>
+  </div>
   <div v-else-if="error">Error: {{ error.message }}</div>
   <div v-else>No data available</div>
 </template>
