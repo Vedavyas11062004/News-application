@@ -96,3 +96,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+.refreshLoad{
+  display: block;
+  margin-block: 1rem;
+  transform: translateX(45%);
+}

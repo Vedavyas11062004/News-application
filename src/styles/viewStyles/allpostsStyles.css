@@ -114,3 +114,9 @@
   left: 50%;
   transform: translate(-50%,-40%);
 }
+
+.refreshLoad{
+  display: block;
+  margin-block: 1rem;
+  transform: translateX(45%);
+}

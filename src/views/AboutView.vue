@@ -1,13 +1,13 @@
 <script setup>
-import {ref, computed, watchEffect} from 'vue'
-import {useRoute} from 'vue-router'
-import {useQuery} from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import {useRouter} from 'vue-router'
-import CategoryCard from '../components/CategoryCard.vue'
+import { ref, computed, watchEffect } from "vue";
+import { useRoute } from "vue-router";
+import { useQuery } from "@vue/apollo-composable";
+import gql from "graphql-tag";
+import { useRouter } from "vue-router";
+import CategoryCard from "../components/CategoryCard.vue";
 
-const routers = useRouter()
-const router = useRoute()
+const routers = useRouter();
+const router = useRoute();
 
 const POST_QUERY = gql`
   query GET_POST($id: ID!) {
@@ -48,90 +48,154 @@ const POST_QUERY = gql`
       }
     }
   }
-`
+`;
 
-const {result, loading, error} = useQuery(POST_QUERY, {id: router.params.id})
-const resData = ref('')
+const { result, loading, error,refetch } = useQuery(POST_QUERY, {
+  id: router.params.id,
+});
+const resData = ref("");
 
 const val = computed(() => {
-  const data = result.value
-  return data?.post || {}
-})
+  const data = result.value;
+  return data?.post || {};
+});
 
 watchEffect(() => {
-  console.log(val.value)
-  resData.value = val.value
-})
+  console.log(val.value);
+  resData.value = val.value;
+});
 
 const getImageUrl = (authorImage) => {
-  console.log(authorImage?.author?.node?.avatar?.url)
-  return authorImage?.author?.node?.avatar?.url || ''
-}
+  console.log(authorImage?.author?.node?.avatar?.url);
+  return authorImage?.author?.node?.avatar?.url || "";
+};
 const getFeaturedImage = (resData) => {
-  return resData?.featuredImage?.node?.mediaItemUrl || ''
-}
+  return resData?.featuredImage?.node?.mediaItemUrl || "";
+};
 const goToAuthorsPage = (id) => {
   routers.push({
-    name: 'author',
-    params: {id}
-  })
-}
+    name: "author",
+    params: { id },
+  });
+};
 
 const goToCategoryPage = (id) => {
   routers.push({
-    name: 'category',
-    params: {id}
-  })
-}
+    name: "category",
+    params: { id },
+  });
+};
 
 const getCategoryName = (resData) => {
-  console.log(resData?.categories?.nodes[0]?.name)
-  return resData?.categories?.nodes[0]?.name || ''
+  console.log(resData?.categories?.nodes[0]?.name);
+  return resData?.categories?.nodes[0]?.name || "";
 };
+
+const refreshThreshold = 10; // Adjust this value to set the refresh threshold
+const showRefreshText = ref(false);
+const startY = ref(0);
+const refreshOffset = ref(0);
+const isRefreshing = ref(false);
+
+const onTouchStart = (event) => {
+  startY.value = event.touches[0].clientY;
+  showRefreshText.value = false;
+  isRefreshing.value = false;
+};
+
+const onTouchMove = (event) => {
+  const currentY = event.touches[0].clientY;
+  const distance = currentY - startY.value;
+
+  if (distance > refreshThreshold) {
+    refreshOffset.value = distance;
+    showRefreshText.value = true;
+  } else {
+    refreshOffset.value = 0;
+    showRefreshText.value = false;
+  }
+};
+
+const onTouchEnd = () => {
+  if (showRefreshText.value) {
+    isRefreshing.value = true;
+    refetch();
+    setTimeout(() => {
+      refreshOffset.value = 0;
+      showRefreshText.value = false;
+      isRefreshing.value = false;
+    }, 1500);
+  }
+};
+
 </script>
 
 <template>
-  <div class="about" v-if="result">
+  <div
+    class="about reloadDiv"
+    v-if="result"
+    ref="refresh"
+    @touchstart="onTouchStart"
+    @touchmove="onTouchMove"
+    @touchend="onTouchEnd"
+  >
+    <div v-if="showRefreshText" class="refreshLoad">
+      <video autoPlay muted loop width="50" height="50">
+        <source src="@/assets/loadingAnimation.mp4" type="video/mp4" />
+      </video>
+    </div>
     <div class="top_part">
       <h1>{{ resData.title }}</h1>
       <div class="category">
-        <span @click="goToCategoryPage(resData?.categories?.nodes[0]?.databaseId)">{{ getCategoryName(resData) }}</span> par
+        <span
+          @click="goToCategoryPage(resData?.categories?.nodes[0]?.databaseId)"
+          >{{ getCategoryName(resData) }}</span
+        >
+        par
         <span @click="goToAuthorsPage(resData?.author.node.databaseId)"
-        >{{ resData?.author?.node?.firstName }}{{ ' ' }}
-          {{ resData?.author?.node?.lastName }}</span>
+          >{{ resData?.author?.node?.firstName }}{{ " " }}
+          {{ resData?.author?.node?.lastName }}</span
+        >
       </div>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi
       </p>
     </div>
     <div class="image_container">
-      <img :src="getFeaturedImage(resData)" alt="img2.."/>
+      <img :src="getFeaturedImage(resData)" alt="img2.." />
       <p v-html="resData.content" class="contentPara"></p>
       <div class="author">
         <div class="author_img">
-          <img :src="getImageUrl(resData)" alt="img.."/>
+          <img :src="getImageUrl(resData)" alt="img.." />
         </div>
         <div class="author_name">
           <h2>
-            {{ resData?.author?.node?.firstName }}{{ ' ' }} {{ resData?.author?.node?.lastName }}
+            {{ resData?.author?.node?.firstName }}{{ " " }}
+            {{ resData?.author?.node?.lastName }}
           </h2>
-          <p @click="goToAuthorsPage(resData?.author.node.databaseId)">See all posts</p>
+          <p @click="goToAuthorsPage(resData?.author.node.databaseId)">
+            See all posts
+          </p>
         </div>
       </div>
       <div class="line_div">
-        <img src="@/assets/Line.svg" class="line"/>
+        <img src="@/assets/Line.svg" class="line" />
       </div>
     </div>
-    <CategoryCard v-if="resData?.categories?.nodes[0]?.databaseId" :categoryId=resData?.categories?.nodes[0]?.databaseId />
+    <CategoryCard
+      v-if="resData?.categories?.nodes[0]?.databaseId"
+      :categoryId="resData?.categories?.nodes[0]?.databaseId"
+    />
   </div>
-  
+
   <div v-else-if="loading" class="loadingAnimation">
     <video autoPlay muted loop width="50" height="50">
-        <source src="@/assets/loadingAnimation.mp4" type='video/mp4'/>
+      <source src="@/assets/loadingAnimation.mp4" type="video/mp4" />
     </video>
-  </div>  <div v-else-if="error">Error: {{ error.message }}</div>
+  </div>
+  <div v-else-if="error">Error: {{ error.message }}</div>
   <div v-else>No data available</div>
 </template>
 
@@ -281,93 +345,83 @@ const getCategoryName = (resData) => {
   margin-block: 2rem;
 }
 
-
-:deep(.contentPara  img) {
+:deep(.contentPara img) {
   width: 90vw;
   height: 250px;
   margin-inline: auto;
   object-fit: cover;
 }
 
-:deep(.contentPara p){
+:deep(.contentPara p) {
   margin: 1em 0;
   line-height: 1.5;
 }
-:deep(.contentPara p code){
+:deep(.contentPara p code) {
   background-color: #eee;
   padding: 0.05em 0.2em;
   border: 1px solid #ccc;
 }
 
-:deep(.contentPara ol,
-ul){
+:deep(.contentPara ol, ul) {
   margin: 1em;
 }
-:deep(.contentPara ol li ol,
-ol li ul,
-ul li ol,
-ul li ul){
+:deep(.contentPara ol li ol, ol li ul, ul li ol, ul li ul) {
   margin: 0 2em;
 }
- :deep(.contentPara ol li p,
- ul li p){
+:deep(.contentPara ol li p, ul li p) {
   margin: 0;
 }
 
-:deep(.contentPara dl){
+:deep(.contentPara dl) {
   font-family: monospace, monospace;
 }
- :deep(.contentPara dl dt){
+:deep(.contentPara dl dt) {
   font-weight: bold;
 }
- :deep(.contentPara dl dd){
+:deep(.contentPara dl dd) {
   margin: -1em 0 1em 1em;
 }
 
- :deep(.contentPara img){
+:deep(.contentPara img) {
   max-width: 100%;
   /* display: block; */
   margin: 0 auto;
   padding: 0.5em;
 }
 
- :deep(.contentPara blockquote){
+:deep(.contentPara blockquote) {
   padding-left: 1em;
   font-style: italic;
   border-left: solid 1px #fa6432;
 }
 
- :deep(.contentPara table){
+:deep(.contentPara table) {
   font-size: 1rem;
   text-align: left;
   caption-side: bottom;
   margin-bottom: 2em;
 }
- :deep(.contentPara table *){
+:deep(.contentPara table *) {
   border: none;
 }
- :deep(.contentPara table thead,
- table tr){
+:deep(.contentPara table thead, table tr) {
   display: table;
   table-layout: fixed;
   width: 100%;
 }
-:deep(.contentPara table tr:nth-child(even) ){
+:deep(.contentPara table tr:nth-child(even)) {
   background-color: rgba(200, 200, 200, 0.2);
 }
-:deep(.contentPara table tbody){
+:deep(.contentPara table tbody) {
   display: block;
   max-height: 70vh;
   overflow-y: auto;
 }
-:deep(.contentPara table td,
-table th){
+:deep(.contentPara table td, table th) {
   padding: 0.25em;
 }
 
-:deep(.contentPara table,
-.highlight > pre,
-pre.example ){
+:deep(.contentPara table, .highlight > pre, pre.example) {
   max-height: 70vh;
   margin: 1em 0;
   padding: 1em;
@@ -377,36 +431,41 @@ pre.example ){
   border: 1px dashed rgba(250, 100, 50, 0.5);
 }
 
-:deep(.contentPara figure){
+:deep(.contentPara figure) {
   margin: 1em 0;
 }
-:deep(.contentPara figure figcaption){
+:deep(.contentPara figure figcaption) {
   font-family: monospace, monospace;
   font-size: 0.75em;
   text-align: center;
   color: grey;
 }
 
-:deep(.contentPara .footnote-definition sup){
+:deep(.contentPara .footnote-definition sup) {
   margin-left: -1.5em;
   float: left;
 }
 
-:deep(.contentPara .footnote-definition .footnote-body){
+:deep(.contentPara .footnote-definition .footnote-body) {
   margin: 1em 0;
   padding: 0 1em;
   border: 1px dashed rgba(250, 100, 50, 0.3);
   background-color: rgba(200, 200, 200, 0.2);
 }
-:deep(.contentPara .footnote-definition .footnote-body p:only-child){
+:deep(.contentPara .footnote-definition .footnote-body p:only-child) {
   margin: 0.2em 0;
 }
 
-.loadingAnimation{
+.loadingAnimation {
   position: absolute;
   top: 45%;
   left: 50%;
-  transform: translate(-50%,-40%);
+  transform: translate(-50%, -40%);
 }
 
+.refreshLoad{
+  display: block;
+  margin-block: 1rem;
+  transform: translateX(45%);
+}
 </style>
