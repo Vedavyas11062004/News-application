@@ -57,43 +57,58 @@ const CHARACTERS_QUERY = gql`
   }
 `
 const { result, loading, error } = useQuery(CHARACTERS_QUERY)
+
 const val = computed(() => {
-  const data = result.value
-  return data?.posts?.nodes || []
-})
+  return result.value?.posts?.nodes || [];
+});
+
 
 const resData = ref('')
 const len = ref(0)
+const componentKey = ref(0);
 
 watchEffect(() => {
-  // console.log(val.value)
-  resData.value = val.value
-  len.value = resData.value.length
-  console.log(token);
-  // console.log(resData.value.length)
+  if (val.value) {
+    resData.value = val.value;
+    len.value = resData.value.length;
+    console.log(token);
+  }
 });
 
-// const props = defineProps(['resData']); 
 
 </script>
 
 <template>
   <main v-if="len > 0">
-    <NewsCard  :resData="resData"/>
+    <KeepAlive>
+      <NewsCard :key="componentKey" :resData="resData"/>
+    </KeepAlive>
     <Cta />
-    <CategoryList />
-    <TitleSection :categoryId=config.categoryId1 />
-    <TitleSection :categoryId=config.categoryId2 />
+    <KeepAlive>
+      <CategoryList />
+    </KeepAlive>
+    <KeepAlive>
+      <TitleSection :categoryId=config.categoryId1 />
+    </KeepAlive>
+    <KeepAlive>
+      <TitleSection :categoryId=config.categoryId2 />
+    </KeepAlive>
     <Cta />
     <div class="line_div">
       <img src="@/assets/Line.svg" class="line" />
     </div>
-    <TitleSection :categoryId=config.categoryId3 />
-    <TitleSection :categoryId=config.categoryId4 />
+    <KeepAlive>
+      <TitleSection :categoryId=config.categoryId3 />
+    </KeepAlive>
+    <KeepAlive>
+      <TitleSection :categoryId=config.categoryId4 />
+    </KeepAlive>
     <Cta />
     <div class="buttomTitle_section">
-      <TitleSection :categoryId=config.categoryId1 />
-    </div>
+        <KeepAlive>
+          <TitleSection :categoryId=config.categoryId1 />
+        </KeepAlive>
+      </div>
     <Cta class="lastCta" />
   </main>
   <div v-else-if="loading" class="loadingAnimation">
