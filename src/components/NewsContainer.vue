@@ -1,6 +1,11 @@
 <script setup>
 import { useRouter } from 'vue-router'
-const router = useRouter()
+import { useToken } from "../stores/counter";
+
+const tokenstore = useToken();
+const token = tokenstore.token;
+const router = useRouter();
+
 const {data,isVisible} = defineProps(['data','isVisible']);
 console.log(data);
 const getImageUrl = (featuredImage) => {
@@ -8,26 +13,47 @@ const getImageUrl = (featuredImage) => {
 };
 const emits = defineEmits();
 const getCategoryLink = (id) => {
-  router.push({
-    name: 'category',
-    params: { id }
-  })
+  if (token) {
+    router.push({
+      name: 'category',
+      params: { id }
+    })
+  }else {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
+    router.push({
+      name: "login",
+    });
+  }
   emits('close')
 };
 
 const goToAuthorsPage = (id) => {
-  router.push({
-    name: 'author',
-    params: { id }
-  })
+  if (token) {
+    router.push({
+      name: 'author',
+      params: { id }
+    })
+  }else {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
+    router.push({
+      name: "login",
+    });
+  }
   emits('close')
 }
 
 const redirectToSinglePage = (id) => {
-  router.push({
-    name: 'about',
-    params: { id }
-  })
+  if (token) {
+    router.push({
+      name: 'about',
+      params: { id }
+    })
+  }else {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
+    router.push({
+      name: "login",
+    });
+  }
   emits('close')
 };
 

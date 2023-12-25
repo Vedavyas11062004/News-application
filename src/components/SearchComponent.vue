@@ -78,7 +78,7 @@ const handleClose = () => {
 </script>
 
 <template>
-  <div class="searchPopUp" v-if="result">
+  <div class="searchPopUp">
     <h3>Search</h3>
     <div class="searchBar">
       <input v-model="searchVal" type="text" placeholder="search a post ..." />
@@ -88,8 +88,6 @@ const handleClose = () => {
     <NewsContainer v-for="ele in data" :key="ele.id" :data="ele" :is-visible="isVisible"
     @close="handleClose" />
   </div>
-  <div class="searchPopUp" v-else-if="loading">loading...</div>
-  <div class="searchPopUp" v-else>error</div>
 </template>
 <style scoped>
 .searchPopUp {

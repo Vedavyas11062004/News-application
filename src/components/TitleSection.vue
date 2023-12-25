@@ -91,6 +91,7 @@ const redirectToSinglePage = (id) => {
   }
   else
   {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
     router.push({
       name: "login",
     });
@@ -106,6 +107,7 @@ const getCategoryLink = (id) => {
   }
   else
   {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
     router.push({
       name: "login",
     });
@@ -121,6 +123,7 @@ const goToAuthorsPage = (id) => {
   }
   else
   {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
     router.push({
       name: "login",
     });

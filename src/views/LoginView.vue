@@ -3,8 +3,8 @@ import { ref, watchEffect } from "vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
 import { useRouter } from "vue-router";
-import {useToken } from "../stores/counter"
-import '../styles/viewStyles/loginStyles.css';
+import { useToken } from "../stores/counter";
+import "../styles/viewStyles/loginStyles.css";
 
 const tokenstore = useToken();
 const token = tokenstore.token;
@@ -35,41 +35,50 @@ const LOGIN_MUTATION = gql`
 const { mutate: loginUser } = useMutation(LOGIN_MUTATION);
 
 const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await loginUser({
-        username: name.value,
-        password: password.value,
-      });
-      console.log("User data:", data);
-      authToken.value = data.login.authToken
-      tokenstore.changeToken(data.login.authToken);
-      console.log(token);
+  e.preventDefault();
+  try {
+    const { data } = await loginUser({
+      username: name.value,
+      password: password.value,
+    });
+    console.log("User data:", data);
+    authToken.value = data.login.authToken;
+    tokenstore.changeToken(data.login.authToken);
+    console.log(token);
+
+    const previousRoute = localStorage.getItem("previousRoute");
+    console.log(previousRoute);
+    localStorage.removeItem("previousRoute");
+    
+    if (previousRoute) {
+      router.push(previousRoute);
+    } else {
       router.push({
-        name: 'home'
-      })
-    } catch (error) {
-      console.error("Mutation error:", error);
-      alert("wrong userName or password");
+        name: "home",
+      });
     }
+  } catch (error) {
+    console.error("Mutation error:", error);
+    alert("wrong userName or password");
+  }
 };
 
-watchEffect(()=>{
-    console.log(authToken.value);
-    console.log(token);
+watchEffect(() => {
+  console.log(authToken.value);
+  console.log(token);
 });
-
 </script>
 
 <template>
   <form @submit="handleSubmit">
-    <label for="name">User Name:
+    <label for="name"
+      >User Name:
       <input type="text" v-model="name" />
     </label>
-    <label for="password">Password:
-      <input type="password" v-model="password" autocomplete="on"/>
+    <label for="password"
+      >Password:
+      <input type="password" v-model="password" autocomplete="on" />
     </label>
     <button type="submit">Submit</button>
   </form>
 </template>
-

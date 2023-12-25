@@ -25,6 +25,7 @@ const getCategoryLink = (id) => {
       params: { id },
     });
   } else {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
     router.push({
       name: "login",
     });
@@ -38,6 +39,7 @@ const goToAuthorsPage = (id) => {
       params: { id },
     });
   } else {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
     router.push({
       name: "login",
     });
@@ -51,6 +53,7 @@ const redirectToSinglePage = (id) => {
       params: { id },
     });
   } else {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
     router.push({
       name: "login",
     });

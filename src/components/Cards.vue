@@ -15,6 +15,7 @@ const redirectToSinglePage = () => {
       params: { id },
     });
   } else {
+    localStorage.setItem('previousRoute',router.currentRoute.value.path);
     router.push({
       name: "login",
     });
