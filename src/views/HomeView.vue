@@ -1,15 +1,16 @@
 <script setup>
-import { ref, computed, watchEffect, defineAsyncComponent } from 'vue'
+import NewsCard from '../components/NewsCard.vue'
+import Cta from '../components/Cta.vue'
+import CategoryList from '../components/CategoryList.vue'
+import TitleSection from '../components/TitleSection.vue'
+import config from '../../config'
+import { ref, computed, watchEffect} from 'vue'
+import gql from 'graphql-tag'
 import { useQuery } from '@vue/apollo-composable'
 import { useToken } from '../stores/counter'
-import config from '../../config'
-import gql from 'graphql-tag'
 import '../styles/viewStyles/homeStyles.css'
-
-
 const tokenstore = useToken();
 const token = tokenstore.token;
-
 const CHARACTERS_QUERY = gql`
   query GET_POSTS_FOR_DAY {
     posts(last: 10, where: { dateQuery: { day: 29, month: 9, year: 2023 } }) {
@@ -55,45 +56,52 @@ const CHARACTERS_QUERY = gql`
 `
 const { result, loading, error } = useQuery(CHARACTERS_QUERY)
 const val = computed(() => {
-  const data = result.value
-  return data?.posts?.nodes || []
-})
-
+  return result.value?.posts?.nodes || [];
+});
 const resData = ref('')
 const len = ref(0)
-
+const componentKey = ref(0);
 watchEffect(() => {
-  resData.value = val.value
-  len.value = resData.value.length
-  console.log(token);
+  if (val.value) {
+    resData.value = val.value;
+    len.value = resData.value.length;
+    console.log(token);
+  }
 });
-
-const LazyNewsCard = defineAsyncComponent(() => import('../components/NewsCard.vue'))
-const LazyCta = defineAsyncComponent(() => import('../components/Cta.vue'))
-const LazyCategoryList = defineAsyncComponent(() => import('../components/CategoryList.vue'))
-const LazyTitleSection = defineAsyncComponent(() => import('../components/TitleSection.vue'));
-
-
 </script>
 
 <template>
   <main v-if="len > 0">
-    <component :is="LazyNewsCard" :resData="resData" />
-    <component :is="LazyCta" />
-    <component :is="LazyCategoryList" />
-    <component :is="LazyTitleSection" :categoryId="config.categoryId1" />
-    <component :is="LazyTitleSection" :categoryId="config.categoryId2" />
-    <component :is="LazyCta" />
+    <KeepAlive>
+      <NewsCard :key="componentKey" :resData="resData"/>
+    </KeepAlive>
+    <Cta />
+    <KeepAlive>
+      <CategoryList />
+    </KeepAlive>
+    <KeepAlive>
+      <TitleSection :categoryId=config.categoryId1 />
+    </KeepAlive>
+    <KeepAlive>
+      <TitleSection :categoryId=config.categoryId2 />
+    </KeepAlive>
+    <Cta />
     <div class="line_div">
       <img src="@/assets/Line.svg" class="line" />
     </div>
-    <component :is="LazyTitleSection" :categoryId="config.categoryId3" />
-    <component :is="LazyTitleSection" :categoryId="config.categoryId4" />
-    <component :is="LazyCta" />
+    <KeepAlive>
+      <TitleSection :categoryId=config.categoryId3 />
+    </KeepAlive>
+    <KeepAlive>
+      <TitleSection :categoryId=config.categoryId4 />
+    </KeepAlive>
+    <Cta />
     <div class="buttomTitle_section">
-      <component :is="LazyTitleSection" :categoryId="config.categoryId1" />
-    </div>
-    <component :is="LazyCta" class="lastCta" />
+        <KeepAlive>
+          <TitleSection :categoryId=config.categoryId1 />
+        </KeepAlive>
+      </div>
+    <Cta class="lastCta" />
   </main>
   <div v-else-if="loading" class="loadingAnimation">
     <video autoPlay muted loop width="50" height="50">
