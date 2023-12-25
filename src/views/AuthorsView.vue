@@ -46,7 +46,7 @@ query Author($cid: ID!) {
 }
 `;
 
-const { result } = useQuery(POST_QUERY, { cid: router.params.id }); 
+const { result,loading, error } = useQuery(POST_QUERY, { cid: router.params.id }); 
 
 const resData = ref([]);
 const authorName = ref('');
@@ -67,7 +67,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="category_page">
+  <div class="category_page" v-if="result">
       <h1>Author : {{ authorName }}</h1>
       <p>{{ authorDisc }}</p>
       <h2>Related posts </h2>
@@ -81,4 +81,11 @@ watchEffect(() => {
         <Cta/>
     </div>
   </div>
+  <div v-else-if="loading" class="loadingAnimation">
+    <video autoPlay muted loop width="50" height="50">
+        <source src="@/assets/loadingAnimation.mp4" type='video/mp4'/>
+    </video>
+  </div>
+  <div v-else-if="error">Error: {{ error.message }}</div>
+  <div v-else>No data available</div>
 </template>

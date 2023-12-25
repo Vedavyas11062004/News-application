@@ -47,7 +47,7 @@ const POST_QUERY = gql`
   }
 `;
 
-const {result} = useQuery(POST_QUERY, {cid: router.params.id}); // Passing variables directly
+const {result,loading, error} = useQuery(POST_QUERY, {cid: router.params.id}); // Passing variables directly
 
 const resData = ref([]);
 
@@ -63,7 +63,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="category_page">
+  <div class="category_page" v-if="result">
     <h1>Catégorie : {{ resData[0]?.categories?.nodes[0]?.name }}</h1>
     <div class="category_cards">
       <Cards v-for="card in resData" :key="card.title" class="category_card" :data="card"
@@ -76,5 +76,12 @@ watchEffect(() => {
       <Cta/>
     </div>
   </div>
+  <div v-else-if="loading" class="loadingAnimation">
+    <video autoPlay muted loop width="50" height="50">
+        <source src="@/assets/loadingAnimation.mp4" type='video/mp4'/>
+    </video>
+  </div>
+  <div v-else-if="error">Error: {{ error.message }}</div>
+  <div v-else>No data available</div>
 </template>
 
